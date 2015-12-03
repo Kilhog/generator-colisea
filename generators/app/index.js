@@ -14,7 +14,7 @@ module.exports = yeoman.generators.Base.extend({
     ));
   },
 
-  askModel: function () {
+  askModel: function() {
     var done = this.async();
 
     var files = fs.readdirSync('config/yml');
@@ -66,6 +66,29 @@ module.exports = yeoman.generators.Base.extend({
       this.props = _.merge(this.props, _.map(props, function(o) {return {generatePages: o}}));
       done();
     }.bind(this));
+  },
+
+  creationObjectName: function() {
+
+    var plop = `
+      $object_name = new Base\\ObjectName();
+      $object_name->setName("PhaseEtat");
+      $object_name->setTitle("PhaseEtat");
+      $object_name->setDescription("Gestion des PhaseEtat");
+      $object_name->setModuleId($module_sample_object->getId());
+      $em->persist($object_name);
+    `;
+
+
+    var data = fs.readFileSync("config/samples/sample_object_name.php").toString().split("\n");
+    data.splice(129, 0, plop);
+    var text = data.join("\n");
+
+    fs.writeFile("config/samples/sample_object_name.php", text, function (err) {
+      if (err) return console.log(err);
+    });
+
+
   },
 
   writing: function () {
