@@ -7,13 +7,15 @@ var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
 
-  askModel: function () {
-    var done = this.async();
-
+  intro: function() {
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the riveting ' + chalk.red('Colisea') + ' generator!'
     ));
+  },
+
+  askModel: function () {
+    var done = this.async();
 
     var files = fs.readdirSync('config/yml');
 
@@ -25,7 +27,25 @@ module.exports = yeoman.generators.Base.extend({
     }];
 
     this.prompt(prompts, function (props) {
-      this.props = props;
+      this.props = _.map(props.ymlModels, function(o, i) {return {id: i, name: o}});
+      done();
+    }.bind(this));
+  },
+
+  askObjectName: function() {
+    var done = this.async();
+
+    var prompts = _.map(this.props, function(o) {
+      return {
+        type: 'input',
+        name: o.id.toString(),
+        message: 'What object name for ' + o.name + ' ?',
+        default: o.name.replace('.dcm.yml', '')
+      }
+    });
+
+    this.prompt(prompts, function (props) {
+      this.props = _.merge(this.props, _.map(props, function(o) {return {objectName: o}}));
       done();
     }.bind(this));
   },
