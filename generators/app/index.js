@@ -50,6 +50,24 @@ module.exports = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
+  askPages: function() {
+    var done = this.async();
+
+    var prompts = _.map(this.props, function(o) {
+      return {
+        type: 'confirm',
+        name: o.id.toString(),
+        message: 'Generate pages for ' + o.name + ' ?',
+        default: true
+      }
+    });
+
+    this.prompt(prompts, function (props) {
+      this.props = _.merge(this.props, _.map(props, function(o) {return {generatePages: o}}));
+      done();
+    }.bind(this));
+  },
+
   writing: function () {
     //this.fs.copy(
     //  this.templatePath('dummyfile.txt'),
