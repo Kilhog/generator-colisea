@@ -225,6 +225,13 @@ module.exports = yeoman.generators.Base.extend({
 
       fs.writeFileSync("config/serialize/" + obj.objectName + "Serialize.php", file);
     }
+  },
+
+  createRest: function() {
+    for(let obj of this.props) {
+      var file = fs.readFileSync(this.templatePath('rest.php')).toString().replace(/%%0%%/g, obj.objectName);
+      fs.writeFileSync("rest/" + obj.objectName + ".php", file);
+    }
   }
 
 });
