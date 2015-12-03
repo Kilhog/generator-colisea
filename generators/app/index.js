@@ -80,6 +80,13 @@ module.exports = yeoman.generators.Base.extend({
     `;
 
 
+
+    var fs = require('fs');
+    var array = fs.readFileSync('config/samples/sample_object_name.php').toString().split("\n");
+    for(let i in array) {
+        console.log(array[i]);
+    }
+
     var data = fs.readFileSync("config/samples/sample_object_name.php").toString().split("\n");
     data.splice(129, 0, plop);
     var text = data.join("\n");
