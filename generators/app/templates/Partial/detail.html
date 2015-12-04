@@ -1,0 +1,48 @@
+<div class="row well well-lg">
+  <div class="col-sm-1"></div>
+
+  <form name="%%1%%_form" class="form-horizontal col-sm-10">
+    <div class="row">
+      <div class="col-sm-12 row">
+        <p class="h2 col-sm-8">Id : {{%%1%%.result.id}}</p>
+        <div class="col-sm-4 text-right hidden-print">
+          <button class="btn btn-large btn-primary ng-scope" type="button" ng-click="state.modifier = true" tooltip-placement="bottom" tooltip="Modifier" ng-if="droits.write && !state.modifier">
+            <span class="glyphicon glyphicon-pencil"></span>
+          </button>
+          <button class="btn btn-large btn-danger ng-scope" type="button" ng-click="supprimer.open_supprimer()" tooltip-placement="bottom" tooltip="Supprimer" ng-if="droits.remove && !state.modifier">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-12">&nbsp;</div>
+      <div class="col-sm-12 alert alert-danger integrity-error" ng-if="show_error_delete">Impossible de supprimer cette %%1%%, car elle est actuellement utilisé.</div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <p class="panel-title">Informations générales</p>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="col-sm-12 form-group" ng-class="{'has-error': %%1%%_form.code.$invalid}">
+          <label class="strong col-sm-2 control-label" for="code">Code : </label>
+          <div class="col-sm-2">
+            <p ng-if="!state.modifier" class="form-control-static">{{%%1%%.result.code}}</p>
+            <input ng-if="state.modifier" id="code" type="text" class="form-control" name="code" ng-model="%%1%%.result.code" required>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-sm-12 text-center hidden-print" ng-if="state.modifier">
+      <button class="btn btn-large btn-danger" type="button" ng-click="save()" ng-disabled="%%1%%_form.$invalid">
+        <span class="fa fa-check"></span> Enregistrer
+      </button>
+      <button class="btn btn-large btn-default" type="button" ng-click="annuler.open_annuler()">
+        <span class="fa fa-ban"></span> Annuler
+      </button>
+    </div>
+
+  </form>
+</div>

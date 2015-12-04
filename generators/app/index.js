@@ -238,8 +238,11 @@ module.exports = yeoman.generators.Base.extend({
   createPartials: function() {
     for(let obj of this.props) {
       if(obj.generatePages) {
-        fs.writeFileSync("partials/" + obj.objectName + "/detail.html");
-        fs.writeFileSync("partials/" + obj.objectName + "/liste.html");
+        var files = fs.readFileSync(this.templatePath('Partial/liste.html')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
+        fs.writeFileSync("partials/" + obj.objectName + "/liste.html", files);
+
+        files = fs.readFileSync(this.templatePath('Partial/detail.html')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
+        fs.writeFileSync("partials/" + obj.objectName + "/detail.html", files);
       }
     }
   },
