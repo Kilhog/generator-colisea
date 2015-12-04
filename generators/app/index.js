@@ -6,6 +6,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var crypto = require('crypto');
 var yaml = require('js-yaml');
+var path = require('path');
 
 module.exports = yeoman.generators.Base.extend({
 
@@ -246,7 +247,8 @@ module.exports = yeoman.generators.Base.extend({
   createJs: function() {
     for(let obj of this.props) {
       if(obj.generatePages) {
-        fs.writeFileSync("js/" + _.camelCase(obj.objectName) + ".js");
+        var files = fs.readFileSync(this.templatePath('Js/header.js')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, path.basename(this.destinationRoot()));
+        fs.writeFileSync("js/" + _.camelCase(obj.objectName) + ".js", files);
       }
     }
   },

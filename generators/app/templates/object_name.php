@@ -1,4 +1,4 @@
-  $object_name = new Base\\ObjectName();
+  $object_name = new Base\ObjectName();
   $object_name->setName("%%0%%");
   $object_name->setTitle("%%0%%");
   $object_name->setDescription("%%0%%");
