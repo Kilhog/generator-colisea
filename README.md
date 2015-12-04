@@ -23,7 +23,5 @@ MIT © [Kilhog]()
 
 [npm-image]: https://badge.fury.io/js/generator-colisea.svg
 [npm-url]: https://npmjs.org/package/generator-colisea
-[travis-image]: https://travis-ci.org/Kilhog/generator-colisea.svg?branch=master
-[travis-url]: https://travis-ci.org/Kilhog/generator-colisea
 [daviddm-image]: https://david-dm.org/Kilhog/generator-colisea.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/Kilhog/generator-colisea
