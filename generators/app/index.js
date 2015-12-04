@@ -209,7 +209,7 @@ module.exports = yeoman.generators.Base.extend({
         file.push(`      '${mto.name}' => ($data->get${mto.camel}()) ? (new ${mto.relation}Serialize())->toJson($data->get${mto.camel}()) : array(),`);
       }
 
-      file.push(fs.readFileSync(this.templatePath('Serialize/middle.php')).toString());
+      file.push(fs.readFileSync(this.templatePath('Serialize/middle.php')).toString().replace(/%%0%%/g, obj.objectName));
 
       // Set Fields
 
