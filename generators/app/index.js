@@ -248,6 +248,9 @@ module.exports = yeoman.generators.Base.extend({
     for(let obj of this.props) {
       if(obj.generatePages) {
         var files = fs.readFileSync(this.templatePath('Js/header.js')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, path.basename(this.destinationRoot()));
+        files += fs.readFileSync(this.templatePath('Js/liste.js')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName) + "s");
+        files += fs.readFileSync(this.templatePath('Js/detail.js')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
+
         fs.writeFileSync("js/" + _.camelCase(obj.objectName) + ".js", files);
       }
     }
