@@ -189,11 +189,21 @@ module.exports = yeoman.generators.Base.extend({
 
       file.push(fs.readFileSync(this.templatePath('Serialize/class_header.php')).toString().replace(/%%0%%/g, obj.objectName));
 
+      // Get Id
+
       file.push("      '" + obj.data.id.name + "' => $data->get" + obj.data.id.camel + "(),");
 
+      // Get Fields
+
       for(let field of obj.data.fields) {
-        file.push("      '" + field.name + "' => $data->get" + field.camel + "(),");
+        if(field.type == "date" || field.type == "datetime") {
+          file.push(`      '${field.name}' => ($data->get${field.camel}()) ? $data->get${field.camel}()->format(DateTime::ISO8601) : false,`);
+        } else {
+          file.push(`      '${field.name}' => $data->get${field.camel}(),`);
+        }
       }
+
+      // Get ManyToOne
 
       for(let mto of obj.data.manyToOne) {
         file.push(`      '${mto.name}' => ($data->get${mto.camel}()) ? (new ${mto.relation}Serialize())->toJson($data->get${mto.camel}()) : array(),`);
@@ -201,17 +211,23 @@ module.exports = yeoman.generators.Base.extend({
 
       file.push(fs.readFileSync(this.templatePath('Serialize/middle.php')).toString());
 
+      // Set Fields
+
       for(let field of obj.data.fields) {
         file.push(`        case "${field.name}":`);
 
         if(field.type == "boolean") {
           file.push(`          $object->set${field.camel}(TypeUtils::parseBoolean($data[$d]));`);
+        } else if(field.type == "date" || field.type == "datetime") {
+          file.push(`          $object->set${field.camel}(DateTime::createFromFormat(DateTime::ISO8601, $data[$d]));`);
         } else {
           file.push(`          $object->set${field.camel}($data[$d]);`);
         }
 
         file.push(`          break;`);
       }
+
+      // Set ManyToOne
 
       for(let mto of obj.data.manyToOne) {
         file.push(`        case "${mto.name}_id":`);
@@ -238,10 +254,30 @@ module.exports = yeoman.generators.Base.extend({
   createPartials: function() {
     for(let obj of this.props) {
       if(obj.generatePages) {
+        var fields = "";
         var files = fs.readFileSync(this.templatePath('Partial/liste.html')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
         fs.writeFileSync("partials/" + obj.objectName + "/liste.html", files);
 
-        files = fs.readFileSync(this.templatePath('Partial/detail.html')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
+        for(let field of obj.data.fields) {
+          var templateField = "string.html";
+
+          if(field.type == "text") {
+            templateField = "text.html";
+          } else if(field.type == "integer" || field.type == "float") {
+            templateField = "integer.html";
+          } else if(field.type == "boolean") {
+            templateField = "boolean.html";
+          } else if(field.type == "date" || field.type == "datetime") {
+            templateField = "date.html";
+          }
+
+          fields += fs.readFileSync(this.templatePath('Partial/' + templateField)).toString()
+            .replace(/%%1%%/g, _.camelCase(obj.objectName))
+            .replace(/%%name%%/g, field.name)
+            .replace(/%%camel%%/g, field.camel);
+        }
+
+        files = fs.readFileSync(this.templatePath('Partial/detail.html')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName)).replace(/%%2%%/g, fields);
         fs.writeFileSync("partials/" + obj.objectName + "/detail.html", files);
       }
     }
@@ -255,6 +291,23 @@ module.exports = yeoman.generators.Base.extend({
         files += fs.readFileSync(this.templatePath('Js/detail.js')).toString().replace(/%%0%%/g, obj.objectName).replace(/%%1%%/g, _.camelCase(obj.objectName));
 
         fs.writeFileSync("js/" + _.camelCase(obj.objectName) + ".js", files);
+
+        // Add to module.json
+
+        var array = fs.readFileSync("module.json").toString().split("\n");
+
+        var last = _.findLastIndex(array, function(n) {
+          return n.indexOf('angular_modules') != -1;
+        });
+
+        var data = array[last];
+
+        data = data.replace(/",/g, ', mod-' + obj.objectName + '",');
+
+        array.splice(last, 1, data);
+        var text = array.join("\n");
+
+        fs.writeFileSync("module.json", text);
       }
     }
   },

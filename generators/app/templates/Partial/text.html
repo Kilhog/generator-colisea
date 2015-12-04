@@ -1,0 +1,7 @@
+        <div class="col-sm-12 form-group" ng-class="{'has-error': %%1%%_form.%%name%%.$invalid}">
+          <label class="strong col-sm-4 control-label" for="%%name%%">%%camel%% : </label>
+          <div class="col-sm-8">
+            <p ng-if="!state.modifier" class="form-control-static">{{%%1%%.result.%%name%%}}</p>
+            <textarea ng-if="state.modifier" id="%%name%%" class="form-control" name="%%name%%" ng-model="%%1%%.result.%%name%%" required></textarea>
+          </div>
+        </div>

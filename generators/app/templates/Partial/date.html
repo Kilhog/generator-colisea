@@ -1,0 +1,11 @@
+        <div class="col-sm-6 form-group" ng-class="{'has-error': %%1%%_form.%%name%%.$invalid}">
+          <label class="strong col-sm-4 control-label" for="%%name%%">%%camel%% :</label>
+
+          <div class="col-sm-8">
+            <div ng-if="!state.modifier" class="form-control-static">{{%%1%%.result.%%name%% | date:'dd/MM/yyyy' | emptycheck}}</div>
+            <div ng-if="state.modifier">
+              <input type="text" class="form-control" id="%%name%%" name="%%name%%" data-date-format="dd/MM/yyyy"
+                     ng-model="%%1%%.result.%%name%%" data-date-type="number" autoclose="1" bs-datepicker required/>
+            </div>
+          </div>
+        </div>
