@@ -232,6 +232,23 @@ module.exports = yeoman.generators.Base.extend({
       var file = fs.readFileSync(this.templatePath('rest.php')).toString().replace(/%%0%%/g, obj.objectName);
       fs.writeFileSync("rest/" + obj.objectName + ".php", file);
     }
-  }
+  },
+
+  createPartials: function() {
+    for(let obj of this.props) {
+      if(obj.generatePages) {
+        fs.writeFileSync("partials/" + obj.objectName + "/detail.html");
+        fs.writeFileSync("partials/" + obj.objectName + "/liste.html");
+      }
+    }
+  },
+
+  createJs: function() {
+    for(let obj of this.props) {
+      if(obj.generatePages) {
+        fs.writeFileSync("js/" + _.camelCase(obj.objectName) + ".js");
+      }
+    }
+  },
 
 });
