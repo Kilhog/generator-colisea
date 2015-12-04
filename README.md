@@ -1,5 +1,5 @@
-# generator-colisea [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> #Patate
+# generator-colisea [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url]
+> Generator for Colisea 🤖🦄
 
 ## Installation
 
